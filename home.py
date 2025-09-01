@@ -2,11 +2,11 @@ import streamlit as st
 import time
 import base64
 
-def image_to_base64(image_path):
-    """Converts a local image file to a base64 string for embedding in HTML."""
+def file_to_base64(file_path):
+    """Converts a local file to a base64 string for embedding in HTML."""
     try:
-        with open(image_path, "rb") as img_file:
-            return base64.b64encode(img_file.read()).decode()
+        with open(file_path, "rb") as f:
+            return base64.b64encode(f.read()).decode()
     except FileNotFoundError:
         return None
 
@@ -129,6 +129,49 @@ def app():
         color: #d0d0d0;
         margin-top: 0.5rem;
     }
+                .custom-audio-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(40, 40, 60, 0.6);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 15px;
+        padding: 1rem 2rem;
+        width: 100%;
+        max-width: 400px;
+        margin: 1rem auto;
+        box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        transition: all 0.3s ease;
+    }
+    .custom-play-btn {
+        background-color: #1a73e8;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 1.5em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+    .custom-play-btn:hover {
+        background-color: #4285f4;
+        transform: scale(1.1);
+        box-shadow: 0 0 15px rgba(66, 133, 244, 0.6);
+    }
+    .custom-audio-text {
+        font-family: 'Poppins', sans-serif;
+        color: #e0e0e0;
+        font-size: 1.1em;
+        margin-left: 1.5rem;
+        font-weight: 600;
+        text-align: center;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -140,17 +183,24 @@ def app():
 
     if st.session_state.logged_in:
         st.markdown(f"<h3 style='text-align: center;'>Hello, Mr.Somu Chan 💞!</h3>", unsafe_allow_html=True)
+
         note_text = """
         I don’t know how you’ll feel about this, but still—I did it because some things matter to me, and this is my way of celebrating.
         <br><br>
         It’s just a small gift from my side, but it comes with a lot of thought and heart. You’ve been a constant support—whether in laughs, roasts, or even those deep talks that mean more than words can say.
+        It hasn't been long since we first met, but still the things progressed so smoothly and calmy (ofc with the fun and tease along the way) that
+        it never felt we were strangers.
         <br><br>
+        I wish I could do more than this, but since I wanted to do something special, I came up with this idea 
+        to celebrate your special day with this little surprise.<br>
         <b>Wishing you a cheerful, blissful, heartful, and soulful Birthday!</b>
         """ # Truncated
         st.markdown(f'<div class="note-container">{note_text}</div>', unsafe_allow_html=True)
+
+
         
         image_path = "vanitas.jpg"
-        base64_image = image_to_base64(image_path)
+        base64_image = file_to_base64(image_path)
         if base64_image:
             birthday_card_html = f"""
             <div class="card">
@@ -194,6 +244,6 @@ def app():
                         time.sleep(1)
                         st.rerun()
                     else:
-                        st.error("Incorrect details. Are you sure you're my babe? 🤔")
+                        st.error("Incorrect details. Are you sure you're my somu? 🤔")
                 else:
                     st.warning("Please fill in both fields.")

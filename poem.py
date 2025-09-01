@@ -3,31 +3,15 @@ import base64
 import textwrap
 from pathlib import Path
 
-def autoplay_audio(file_path: str):
-    """
-    Plays an audio file automatically in a Streamlit app.
-    This version uses pathlib to create a robust file path.
-    """
-    audio_file_path = Path(file_path)
-    if not audio_file_path.is_file():
-        st.warning(f"Audio file not found at {file_path}")
-        return
-
-    with open(audio_file_path, "rb") as f:
-        data = f.read()
-        b64 = base64.b64encode(data).decode()
-        
-    md = f"""
-        <audio autoplay="true" loop="true">
-        <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-        </audio>
-        """
-    st.markdown(md, unsafe_allow_html=True)
+def file_to_base64(file_path):
+    """Converts a local file to a base64 string for embedding in HTML."""
+    try:
+        with open(file_path, "rb") as f:
+            return base64.b64encode(f.read()).decode()
+    except FileNotFoundError:
+        return None
 
 def display_poem():
-    # Play the audio file automatically
-    autoplay_audio("happybirthday.mp3")
-
     # --- STYLING (CSS) ---
     st.markdown("""
     <style>
@@ -101,6 +85,85 @@ def display_poem():
     """, unsafe_allow_html=True)
 
     st.title("A Special Poem for You 🎂")
+    st.markdown("<h5 style='text-align: center; color: #d0d0d0;'>🎶 Listen to the song while you read...</h5>", unsafe_allow_html=True)
+
+    # This creates the interactive audio player
+    audio_path = "Smile for You.mp3"
+    base64_audio = file_to_base64(audio_path)
+
+    if base64_audio:
+        # Create a self-contained HTML string
+        component_html = f"""
+        <style>
+            .custom-audio-container {{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 1.5rem;
+                padding: 1rem;
+                /* You can add more styling here if you like */
+            }}
+            .custom-play-btn {{
+                background-color: #1a73e8;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                width: 60px;
+                height: 60px;
+                font-size: 1.5em;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+            }}
+            .custom-play-btn:hover {{
+                background-color: #4285f4;
+                transform: scale(1.1);
+            }}
+            .custom-audio-text {{
+                font-family: 'Poppins', sans-serif;
+                color: #e0e0e0;
+                font-size: 1.1em;
+                font-weight: 600;
+            }}
+        </style>
+
+        <div class="custom-audio-container">
+            <button id="playBtn" class="custom-play-btn">▶</button>
+            <span class="custom-audio-text">Play The Song</span>
+        </div>
+
+        <audio id="myAudio" src="data:audio/mp3;base64,{base64_audio}"></audio>
+
+        <script>
+            const audio = document.getElementById('myAudio');
+            const playBtn = document.getElementById('playBtn');
+
+            playBtn.addEventListener('click', function() {{
+                if (audio.paused) {{
+                    audio.play();
+                    playBtn.innerHTML = '❚❚';
+                }} else {{
+                    audio.pause();
+                    playBtn.innerHTML = '▶';
+                }}
+            }});
+
+            // Optional: Reset the button when the song ends
+            audio.addEventListener('ended', function() {{
+                playBtn.innerHTML = '▶';
+                audio.currentTime = 0; // Rewind to the start
+            }});
+        </script>
+        """
+        
+        # Use st.components.v1.html to render the component
+        st.components.v1.html(component_html, height=90)
+
+    else:
+        st.warning(f"Could not find '{audio_path}'.")
 
     # --- The Poem Card ---
     poem_text = """
