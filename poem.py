@@ -193,7 +193,7 @@ def display_poem():
     With wit that stings but warmth that ties.
 
     Happy Birthday—may your day be wild and bright 🎉,
-    May blessings hit harder than Divine Smite ⚡.
+    May blessings hit harder than our Divine Smite ⚡.
     Because the world feels lighter with a friend like you,
     Rare as a mythic, and just as true 💎.
     """
