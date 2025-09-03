@@ -182,7 +182,7 @@ def app():
         st.session_state.username = None
 
     if st.session_state.logged_in:
-        st.markdown(f"<h3 style='text-align: center;'>Hello, Mr.Somu Chan 💞!</h3>", unsafe_allow_html=True)
+        st.markdown(f"<h3 style='text-align: center;'>Hello, my dear Somu Chan 💞!</h3>", unsafe_allow_html=True)
 
         note_text = """
         I don’t know how you’ll feel about this, but still—I did it because some things matter to me, and this is my way of celebrating.

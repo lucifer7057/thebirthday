@@ -83,9 +83,6 @@ class MultiApp:
                 },
             }
         )
-
-
-
         for app in self.apps:
             if app["title"] == selected:
                 app["function"]()
